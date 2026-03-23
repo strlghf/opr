@@ -1,41 +1,47 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [bill, setBill] = useState<number>(0);
-  const [tip, setTip] = useState<number>(0);
-  const [people, setPeople] = useState<number>(1);
+  const [billInput, setBillInput] = useState("");
+  const [tipInput, setTipInput] = useState("");
+  const [people, setPeople] = useState(1);
 
   const calculateBill = () => {
-    
+    if (!billInput || !tipInput) return;
+
+    const bill = +billInput;
+    const tipPercentange = +tipInput / 100;
+    const tipAmount = bill * tipPercentange;
+    const total = bill + tipAmount;
+    const perPersonTotal = total / people;
+
+    return perPersonTotal.toFixed(2);
   }
 
   const increasePeople = () => {
     setPeople(p => p + 1);
-    
-    calculateBill();
   }
 
   const decreasePeople = () => {
     if (people === 1) return
-    
+
     setPeople(p => p - 1);
-    calculateBill();
   }
 
+  const p = calculateBill();
+
   return (
-    <div className='wrapper'>
-      <div className="container" id='topContainer'>
+    <div className="wrapper">
+      <div className="container" id="topContainer">
         <div className="title">Bill total</div>
         <div className="inputContainer">
           <span>$</span>
           <input
-            value={bill}
-            onChange={calculateBill}
-            type='text'
-            id='billTotalInput'
-            placeholder='0.00'
+            value={billInput}
+            onChange={e => setBillInput(e.target.value)}
+            type="text"
+            id="billTotalInput"
+            placeholder="0.00"
           />
         </div>
       </div>
@@ -44,11 +50,11 @@ function App() {
         <div className="inputContainer">
           <span>%</span>
           <input
-            value={tip}
-            onChange={calculateBill}
-            type='text'
-            id='tipInput'
-            placeholder='10'
+            value={tipInput}
+            onChange={e => setTipInput(e.target.value)}
+            type="text"
+            id="tipInput"
+            placeholder="10"
           />
         </div>
       </div>
@@ -71,7 +77,7 @@ function App() {
         </div>
         <div className="totalContainer">
           <div className="title">Total per Person</div>
-          <div className="total" id="perPersonTotal">${bill}</div>
+          <div className="total" id="perPersonTotal">${p ? p : 0}</div>
         </div>
       </div>
     </div>
